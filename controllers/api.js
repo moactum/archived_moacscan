@@ -34,17 +34,17 @@ module.exports = {
         console.log(`got data ${data} ...`);
         ctx.rest(data);
     },
+    'GET /api/search': async (ctx, next) => {
+		ctx.rest({info: 'index not ready yet, use the search please'});
+	},
     'GET /api/search/:hash': async (ctx, next) => {
         var data = chain3.mc.getBlock(ctx.params.hash);
-		sleep.sleep(2)
 		if (!data) {
 			console.log("try tx")
         	data = chain3.mc.getTransaction(ctx.params.hash);
-			sleep.sleep(2)
 			if (!data) {
 				console.log("try wallet")
         		data = chain3.mc.getBalance(ctx.params.hash);
-				sleep.sleep(2)
 				if (!data) {
             		throw new APIError('invalid_data', 'not found');
 				} else {

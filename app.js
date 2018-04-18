@@ -33,6 +33,13 @@ app.use(async (ctx, next) => {
 let staticFiles = require('./static-files');
 app.use(staticFiles('/static/', __dirname + '/static'));
 
+app.use(async (ctx, next) => {
+	if (ctx.request.path === '/robots.txt') {
+		ctx.response.redirect('/static/robots.txt');
+	} else {
+		await next();
+	}
+});
 // parse request body:
 app.use(bodyParser());
 

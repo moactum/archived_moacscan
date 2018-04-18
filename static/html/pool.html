@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +9,7 @@
 	<meta name="Description" content="MOACscan allows you to explore and search the MOAC blockchain for transactions, addresses, ledgers and other activities taking place on MOAC" />
 	<meta name="author" content="moacscan.io" />
 	<meta name="keywords" content="MOAC, explorer, search, blockchain, crypto, currency, 墨客, 众链之母, 井通科技, 井底望天, 大国游戏" />
-	<title>{{ title }}</title>
+	<title></title>
 	<link rel="stylesheet" href="/static/css/bootstrap.css">
 	<script src="/static/js/jquery.min.js"></script>
 	<script src="/static/js/vue.min.js"></script>
@@ -32,51 +33,34 @@
 					<li><a target="_blank" href="/api/search">Blocks</a></li>
 					<li><a target="_blank" href="/api/search">Transactions</a></li>
 					<li><a target="_blank" href="/api/search">Subchains</a></li>
-					<li><a href="/static/html/pool.html">Minings</a></li>
-					<!--
-					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> User <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a href="/d1">info</a></li>
-					</ul>
-					</li>
-					-->
+					<li><a href="/static/html/pools.html">Minings</a></li>
 				</ul>
 			</div>
 		</div>
 	</header>
-	<main>
-		<div id="important" style="color:#cdbfe3; background-color:#6f5499; padding:30px 0; margin:-20px 0 20px 0;">
-			<div class="container">
-				<h1 style="color:#fff; font-size:32px">Mother Of All Chains</h1>
-				<p style="font-size:16px; line-height:32px">The Blockchain for all your DAPP needs</p>
-			</div>
+	<div id="important" style="color:#cdbfe3; background-color:#6f5499; padding:30px 0; margin:-20px 0 20px 0;">
+		<div class="container">
+			<h1 style="color:#fff; font-size:32px">Mother Of All Chains</h1>
+			<p style="font-size:16px; line-height:32px">The Blockchain for all your DAPP needs</p>
 		</div>
-		<script>
-			$(function () {
-		  	  var vmSearch = new Vue({
-		  	      el: '#search-form',
-		  	      data: { searchString: '' },
-				  methods: {
-				  	submit: function() {
-						location.assign(`/api/search/${this._data.searchString}`);
-					} 
-				  }
-		  	  });	
-			});
-		</script>
-		
-		<div class="container-fluid">
-		    <div class="row" style="padding-bottom:5px;">
-		        <div class="col-md-12" id="search-form">
-		            <div class="input-group">
-						<span class="input-group-addon glyphicon glyphicon-search" @click="submit"></span>
-						<input type="text" class="form-control" v-model="searchString" @keyup.enter="submit"  /> 
-					</div>
-		        </div>
-		    </div>
-		</div>
-		{% block main %} {% endblock %}
-	</main>
+	</div>
+	
+	<div class="container-fluid">
+	    <div class="row">
+	        <div class="col-md-12">
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    <h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> mining pools </h3>
+	                </div>
+	                <div class="panel-body">
+						<h3><a href="http://moacpool.tk">moacpool.tk</a></h3>
+						<h3><a href="http://moacpool.daszichan.com">moacpool.daszichan.com</a></h3>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
 	<footer style="background-color:#ddd; padding: 20px 0;">
 		<div class="container">
 			<p>
@@ -90,3 +74,4 @@
 </body>
 
 </html>
+

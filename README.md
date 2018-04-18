@@ -14,16 +14,20 @@
   - ubuntu 18.04 (best)
   
 ## Steps
+  0. have moac running with --rpc option
   1. install node.js
   2. fork, clone the repository
   3. test
-    * --infoverify [--recordpath /path/to/records]
-      * update internals to pick up database changes without --recordpath parameter
-      * you need modify to fit your case
-      * the recordpath is the location of the files with changeset uuid <-> git commitid information 
+    * npm install
+    * open two terminals
+      * start web service with websocket
+        * npm start
+      * pull and feed data to websocket
+        * npm run feed
+    * browse to http://localhost:3002
   4. deploy
     * customeize config.js 
     * deploy nginx referring nginx-sample.conf
   5. production
-    * you can have separate /api beside /ws offloads a single system
-    * you can cluster the instances behind haproxy balancer
+    * you can have separate /api and /ws to offload a single unit
+    * you can cluster multiple units behind haproxy balancer

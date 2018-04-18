@@ -2,244 +2,244 @@
 
 {% block main %}
 
-<script>
-
-function addToUserList(list, user) {
-	var i;
-	for (i=0; i<list.length; i++) {
-		if (list[i].id === user.id) {
-			return;
+		<script>
+		
+		function addToUserList(list, user) {
+			var i;
+			for (i=0; i<list.length; i++) {
+				if (list[i].id === user.id) {
+					return;
+				}
+			}
+			list.push(user);
 		}
-	}
-	list.push(user);
-}
-
-function removeFromUserList(list, user) {
-	var i, target = -1;
-	for (i=0; i<list.length; i++) {
-		if (list[i].id === user.id) {
-			target = i;
-			break;
-		}
-	}
-	if (target >= 0) {
-		list.splice(target, 1);
-	}
-}
-
-function addMessage(list, msg) {
-	list.push(msg);
-	$('#message-list').parent().animate({
-		scrollTop: $('#message-list').height()
-	}, 1000);
-}
-
-function addTxs(list, msg) {
-	msg.data.block.transactions.forEach( hash => list.push(hash) );
-	$('#tx-list').parent().animate({
-		scrollTop: $('#tx-list').height()
-	}, 1000);
-}
-//Vue.filter('humanize_time', function(value) {
-//	return moment.unix(value).fromNow();
-//});
-
-$(function () {
-	var vmMessageList = new Vue({
-		el: '#message-list',
-		data: {
-			messages: []
-		},
-		methods: {
-			block: function (msg) {
-				window.open(`/api/block/${msg.data.block.hash}`);
-			},
-			tooltip: function (msg) {
-				return `
-height:
-${msg.data.block.number}
-
-nonce:
-${msg.data.block.nonce}
-
-miner:
-${msg.data.block.miner}
-
-hash:
-${msg.data.block.hash}
-
-`;
+		
+		function removeFromUserList(list, user) {
+			var i, target = -1;
+			for (i=0; i<list.length; i++) {
+				if (list[i].id === user.id) {
+					target = i;
+					break;
+				}
+			}
+			if (target >= 0) {
+				list.splice(target, 1);
 			}
 		}
-	});
-	var vmTxList = new Vue({
-		el: '#tx-list',
-		data: {
-			txs: []
-		},
-		methods: {
-			transaction: function (tx) {
-				window.open(`/api/tx/${tx}`);
-			},
+		
+		function addMessage(list, msg) {
+			list.push(msg);
+			$('#message-list').parent().animate({
+				scrollTop: $('#message-list').height()
+			}, 1000);
 		}
-	});
-
-	var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac');
-
-	var ws_conncted = true;
-
-	ws.onmessage = function(event) {
-		var data = event.data;
-		console.log("received new websocket message");
-		var msg = JSON.parse(data);
-		if (msg.type === 'datafeed') {
-			if (msg.data.block) {
-				addMessage(vmMessageList.messages, msg);
-				addTxs(vmTxList.txs, msg);
-			}
+		
+		function addTxs(list, msg) {
+			msg.data.block.transactions.forEach( hash => list.push(hash) );
+			$('#tx-list').parent().animate({
+				scrollTop: $('#tx-list').height()
+			}, 1000);
 		}
-	};
-
-	ws.onclose = function (evt) {
-		console.log('[closed] ' + evt.code);
-		ws_connected = false;
-		//alert("websocket closed, refresh page to continue getting updates");
-	};
-
-	ws.onerror = function (code, msg) {
-		console.log('[ERROR] ' + code + ': ' + msg);
-		ws_connected = false;
-	};
-
-	$('#form-chat').submit(function (e) {
-		e.preventDefault();
-		var input = $(this).find('input[type=text]');
-		var text = input.val().trim();
-		console.log('[chat] ' + text);
-		if (text) {
-			input.val('');
-			ws.send(text);
-		}
-	});
-});
-</script>
-
-<main class="container-fluid">
-	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> Blocks</h3>
-				</div>
-				<div class="panel-body">
-					{% raw %}
-					<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
-						<div id="message-list">
-							<div style="margin-bottom:20px;" v-for="msg in messages">
-								<div v-if="msg.type === 'datafeed'">
-									<div class="media" :title="tooltip(msg)" v-on:click="block(msg)">
-										<div class="media-left">
-											<img class="media-object" style="width:6px; height:36px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+		//Vue.filter('humanize_time', function(value) {
+		//	return moment.unix(value).fromNow();
+		//});
+		
+		$(function () {
+			var vmMessageList = new Vue({
+				el: '#message-list',
+				data: {
+					messages: []
+				},
+				methods: {
+					block: function (msg) {
+						window.open(`/api/block/${msg.data.block.hash}`);
+					},
+					tooltip: function (msg) {
+						return `
+		height:
+		${msg.data.block.number}
+		
+		nonce:
+		${msg.data.block.nonce}
+		
+		miner:
+		${msg.data.block.miner}
+		
+		hash:
+		${msg.data.block.hash}
+		
+		`;
+					}
+				}
+			});
+			var vmTxList = new Vue({
+				el: '#tx-list',
+				data: {
+					txs: []
+				},
+				methods: {
+					transaction: function (tx) {
+						window.open(`/api/tx/${tx}`);
+					},
+				}
+			});
+		
+			var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac');
+		
+			var ws_conncted = true;
+		
+			ws.onmessage = function(event) {
+				var data = event.data;
+				console.log("received new websocket message");
+				var msg = JSON.parse(data);
+				if (msg.type === 'datafeed') {
+					if (msg.data.block) {
+						addMessage(vmMessageList.messages, msg);
+						addTxs(vmTxList.txs, msg);
+					}
+				}
+			};
+		
+			ws.onclose = function (evt) {
+				console.log('[closed] ' + evt.code);
+				ws_connected = false;
+				//alert("websocket closed, refresh page to continue getting updates");
+			};
+		
+			ws.onerror = function (code, msg) {
+				console.log('[ERROR] ' + code + ': ' + msg);
+				ws_connected = false;
+			};
+		
+			$('#form-chat').submit(function (e) {
+				e.preventDefault();
+				var input = $(this).find('input[type=text]');
+				var text = input.val().trim();
+				console.log('[chat] ' + text);
+				if (text) {
+					input.val('');
+					ws.send(text);
+				}
+			});
+		});
+		</script>
+		
+		<main class="container-fluid">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> Blocks</h3>
+						</div>
+						<div class="panel-body">
+							{% raw %}
+							<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
+								<div id="message-list">
+									<div style="margin-bottom:20px;" v-for="msg in messages">
+										<div v-if="msg.type === 'datafeed'">
+											<div class="media" :title="tooltip(msg)" v-on:click="block(msg)">
+												<div class="media-left">
+													<img class="media-object" style="width:6px; height:36px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+												</div>
+												<div class="media-body">
+													<ul class="nav nav-pills" role='tablist'>
+														<li role="presentation"><span class="badge">HEIGHT {{ msg.data.block.number }}</span></li>
+														<!--<li role="presentation"><span class="badge">TIMESTAMP {{ msg.data.block.timestamp }}</span></li>-->
+														<li role="presentation"><span class="badge">TXS {{ msg.data.block.transactions.length }}</spn></li>
+													</ul>
+													<span v-text="msg.data.block.hash"></span>
+												</div>
+											</div>
 										</div>
-										<div class="media-body">
-											<ul class="nav nav-pills" role='tablist'>
-												<li role="presentation"><span class="badge">HEIGHT {{ msg.data.block.number }}</span></li>
-												<!--<li role="presentation"><span class="badge">TIMESTAMP {{ msg.data.block.timestamp }}</span></li>-->
-												<li role="presentation"><span class="badge">TXS {{ msg.data.block.transactions.length }}</spn></li>
-											</ul>
-											<span v-text="msg.data.block.hash"></span>
+										<div v-if="msg.type === 'serverinfo'">
+											<div class="media">
+												<div class="media-left">
+													<img class="media-object" style="width:12px; height:48px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+												</div>
+												<div class="media-body">
+													<h4 class="media-heading" v-text="msg.user.name"></h4>
+													<span v-text="msg.data.sockconn"></span>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div v-if="msg.type === 'serverinfo'">
-									<div class="media">
+							</div>
+							{% endraw %}
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Transactions</h3>
+						</div>
+						<div class="panel-body">
+							{% raw %}
+							<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
+								<div id="tx-list">
+									<div class="media" v-for="tx in txs">
+									<div v-on:click="transaction(tx)">
 										<div class="media-left">
-											<img class="media-object" style="width:12px; height:48px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+											<img class="media-object" style="width:6px; height:20px;" v-bind:src="'/static/images/' + user.image + '.png'">
 										</div>
 										<div class="media-body">
-											<h4 class="media-heading" v-text="msg.user.name"></h4>
-											<span v-text="msg.data.sockconn"></span>
+											<span class="media-heading" v-text="tx"></span>
 										</div>
+									</div>
 									</div>
 								</div>
 							</div>
+							{% endraw %}
 						</div>
 					</div>
-					{% endraw %}
 				</div>
 			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Transactions</h3>
-				</div>
-				<div class="panel-body">
-					{% raw %}
-					<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
-						<div id="tx-list">
-							<div class="media" v-for="tx in txs">
-							<div v-on:click="transaction(tx)">
-								<div class="media-left">
-									<img class="media-object" style="width:6px; height:20px;" v-bind:src="'/static/images/' + user.image + '.png'">
-								</div>
-								<div class="media-body">
-									<span class="media-heading" v-text="tx"></span>
-								</div>
-							</div>
-							</div>
+			<div class="row">
+				<div class="col-xs-6 col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">WEB</h3>
+						</div>
+						<div class="panel-body">
+							<p><a target="_blank" href="http://moac.io">http://moac.io</a></p>
+							<p><a target="_blank" href="http://moacfans.com">http://moacfans.com</a></p>
 						</div>
 					</div>
-					{% endraw %}
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">QQ</h3>
+						</div>
+						<div class="panel-body">
+							<p>522035998</p>
+							<p>264831838</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">TELEGRAM</h3>
+						</div>
+						<div class="panel-body">
+							<p>moacblockchain</p>
+							<p>moacdevelopers</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">WECHAT</h3>
+						</div>
+						<div class="panel-body">
+							<p>moacchain</p>
+							<p>&nbsp;</p>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-6 col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">WEB</h3>
-				</div>
-				<div class="panel-body">
-					<p><a target="_blank" href="http://moac.io">http://moac.io</a></p>
-					<p><a target="_blank" href="http://moacfans.com">http://moacfans.com</a></p>
-				</div>
-			</div>
-		</div>
-		<div class="col-xs-6 col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">QQ</h3>
-				</div>
-				<div class="panel-body">
-					<p>522035998</p>
-					<p>264831838</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-xs-6 col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">TELEGRAM</h3>
-				</div>
-				<div class="panel-body">
-					<p>moacblockchain</p>
-					<p>moacdevelopers</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-xs-6 col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">WECHAT</h3>
-				</div>
-				<div class="panel-body">
-					<p>moacchain</p>
-					<p>&nbsp;</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</main>
+		</main>
 {% endblock %}
