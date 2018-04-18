@@ -1,0 +1,46 @@
+{
+	"name": "moacscan",
+	"version": "1.0.0",
+	"description": "websocket with koa integration",
+	"main": "app.js",
+	"scripts": {
+		"start": "node --use_strict app.js",
+		"feed": "node --use_strict feed-ws.js"
+	},
+	"keywords": [
+		"websocket",
+		"ws",
+		"koa",
+		"async",
+		"nunjucks",
+		"moac",
+		"chain3"
+	],
+	"author": "Lospring Liu",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/moactum/moacscan.git"
+	},
+	"dependencies": {
+		"bn.js": "^4.11.8",
+		"chain3": "^0.1.3",
+		"hash.js": "^1.1.3",
+		"keccak": "^1.4.0",
+		"koa": "^2.5.0",
+		"koa-bodyparser": "^4.2.0",
+		"koa-router": "^7.4.0",
+		"mime": "^2.3.1",
+		"mz": "^2.7.0",
+		"nunjucks": "^3.1.2",
+		"secp256k1": "^3.5.0",
+		"sleep": "^5.1.1",
+		"ws": "^5.1.1",
+		"xmlhttprequest": "^1.8.0"
+	},
+	"optionalDependencies": {
+		"bufferutil": "^3.0.4",
+		"utf-8-validate": "^4.0.1",
+		"randomstring": "^1.1.5"
+	}
+}

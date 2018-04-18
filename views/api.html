@@ -1,0 +1,65 @@
+{% extends "base.html" %} 
+{% block main %}
+
+<style>
+/* enable absolute positioning */
+.inner-addon {
+    position: relative;
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+</style>
+<script>
+	$(function () {
+  	  var vmSearch = new Vue({
+  	      el: '#search-form',
+  	      data: { searchString: '' },
+		  methods: {
+		  	submit: function() {
+				window.open(`/api/search/${this._data.searchString}`);
+			} 
+		  }
+  	  });	
+	});
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>API query</h1>
+            <!--<div class="alert alert-danger">displaying api data as webpage</div>-->
+            <div id="search-form" class="inner-addon right-addon">
+				<i class="glyphicon glyphicon-search"></i>
+				<input type="text" class="form-control" v-model="searchString" @keyup.enter="submit"  /> 
+			</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> api query result</h3>
+                </div>
+                <div class="panel-body">
+					<pre>{{ data }}
+					</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
