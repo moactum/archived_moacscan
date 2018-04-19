@@ -1,5 +1,81 @@
 {% extends "base.html" %}
 
+							{% block main_row_graphs %}
+							<div id="ContentPlaceHolder1_mainboxes" class="row margin-bottom-10">
+								<div class="col-sm-6 sm-margin-bottom-20">
+									<div class="service-block-v3 service-block-blue">
+										<i class="icon-globe" style="margin-right:16px"></i>
+										<span class="service-heading" rel='tooltip' data-placement='right' title='View More'><a href="/stat/supply"><font size=2 color='white'>MARKET CAP OF $53.059 Billion</font></a></span>
+										<h4 style="margin-top:2px"><font color='white'><font color='white'>$536.45 @ 0.06518 BTC/ETH <font color='#0ADC00' size='2' rel='tooltip' data-placement='bottom' title='USD/Eth change'> (<b>+</b>6.08%)</font></font></font></h4>
+										<div class="clearfix margin-bottom-5 "></div>
+										<div class="row margin-bottom-20">
+											<div class="col-xs-6 service-in">
+												<small><a href="blocks" rel='tooltip' data-placement='right' title="View List of Blocks"><font color="white">Last Block</font></a></small>
+												<h4 style="color: #FFFFFF"><span id="ContentPlaceHolder1_Label1" style="font-size:Larger;"><a href="blocks" rel='tooltip' data-placement='bottom' title="The latest block no"><font color="white">5466109</font></a></span>
+													<span class='hidden-xs' rel='tooltip' data-placement='right' title='Avg Block Time of the latest 5000 blocks'><font size=2> (14.5s)</font></span>
+												</h4>
+											</div>
+											<div class="col-xs-6 text-right service-in">
+												<small><a href="txs" rel='tooltip' data-placement='left' title="View List of Transactions"><font color="white">Transactions</font></a></small>
+												<h4><a href='/txs' rel='tooltip' data-placement='left' title='Total Txns counter<br>(updated every 5 mins)'><font color='white'>205.18 M</font></a><span class='hidden-xs' rel='tooltip' data-placement='bottom' title='Txns per sec'><font size=2> (7.4 TPS)</font></span></h4>
+											</div>
+										</div>
+										<div class="statistics">
+											<h3 class="heading-xs"><a href="/chart/hashrate" rel='tooltip' data-placement='right' title="View HashRate Chart"><font color="white">Hash Rate</font></a>
+												<a href="/chart/difficulty" class="pull-right" rel='tooltip' data-placement='left' title="View Difficulty Growth Chart"><font color="white">Network Difficulty</font></a>
+											</h3>
+											<font color="white"><span rel='tooltip' data-placement='bottom' title='Avg Hash Rate of the last 12 Hours'>249,657.05 GH/s</span>&nbsp;</font>
+											<span class="pull-right" rel='tooltip' data-placement='bottom' title="Average Difficulty"><font color=white>3,051.02 TH</font></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="tag-box tag-box-v2 box-shadow shadow-effect-1" style="border-right-color: #3498db; border-right-style: solid; border-right-width: 2px; margin-bottom: 0px; background-color: #FFFFFF;">
+										<div id="containerchart" style="min-width: 255px; height: 180px; margin: 0 auto"></div>
+										<script src="/static/highcharts/js/highcharts.js"></script>
+									</div>
+								</div>
+							</div>
+							{% endblock %}
+
+											{% block main_block %}
+											<div class="profile-event">
+												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a href='/block/5466109'><font size="2" color='white'>Block 5466109</font></a></span><small>&gt; 39 secs ago</small></div>
+												<div class="overflow-h">
+													Mined By <a href='/address/0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c' class='address-tag'>SparkPool</a></p>
+													<p><a href="/txs?block=5466109" title="Transactions in this Block"><b>67 txns</b></a> in 10 secs</p>
+													<p> Block Reward 3<b>.</b>2449 Ether</p>
+												</div>
+											</div>
+											<div class="profile-event">
+												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a href='/block/5466100'><font size="2" color='white'>Block 5466100</font></a></span><small>&gt; 1 min ago</small></div>
+												<div class="overflow-h">
+													Mined By <a href='/address/0x2a65aca4d5fc5b5c859090a6c34d164135398226' class='address-tag'>DwarfPool1</a></p>
+													<p><a href="/txs?block=5466100" title="Transactions in this Block"><b>176 txns</b></a> in 7 secs</p>
+													<p> Block Reward 3<b>.</b>12529 Ether</p>
+												</div>
+											</div>
+											{% endblock %}
+
+											{% block main_tx %}
+											<div class="profile-post color-one">
+												<span class="profile-post-numb"><i class="fa fa-hdd-o"></i></span>
+												<div class="profile-post-in">
+													<h3 class="heading-xs">TX# <a href="/tx/0x7d9a12bbd5223c37f78ea955eb577adbd27d5cfc7a26734352059b00d13493e5" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>0x7d9a12bbd5223c37f78ea955eb577adbd27d5cfc7a26734352059b00d13493e5</font></a><span class="pull-right" style="font-size: small">&gt; 39 secs ago &nbsp;</span></h3>
+													<p>From <a href='/address/0x2137f2cd3eaea6d59bbce10e76d16c7cbab047e9' class='address-tag'>0x2137f2cd3eaea6d59bbce10e76d16c7cbab047e9</a> To <a href='/address/0x64f00663f39af179c3612c35bf943810bf3bd428' class='address-tag'>0x64f00663f39af179c3612c35bf943810bf3bd428</a></p>
+													<p>Amount 0<b>.</b>05 Ether</p>
+												</div>
+											</div>
+											<div class="profile-post color-three">
+												<span class="profile-post-numb"><i class="fa fa-hdd-o"></i></span>
+												<div class="profile-post-in">
+													<h3 class="heading-xs">TX# <a href="/tx/0xa438fc13730adac7649721ff3fc8f9e563c98015f2aae6b0257d2504cd920cfc" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>0xa438fc13730adac7649721ff3fc8f9e563c98015f2aae6b0257d2504cd920cfc</font></a><span class="pull-right" style="font-size: small">&gt; 39 secs ago &nbsp;</span></h3>
+													<p>From <a href='/address/0x834565044f65d99e33d78e2d399c3817697d7ba7' class='address-tag'>0x834565044f65d99e33d78e2d399c3817697d7ba7</a> To <a href='/address/0x430ced28da27d478eb0f96b8066926741ee96bef' class='address-tag'>0x430ced28da27d478eb0f96b8066926741ee96bef</a></p>
+													<p>Amount 0<b>.</b>003 Ether</p>
+												</div>
+											</div>
+											{% endblock %}
+
 {% block main %}
 
 		<script>
