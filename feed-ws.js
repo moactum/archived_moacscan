@@ -20,8 +20,6 @@ metrics.block = block;
 var wsc = new WS('ws://127.0.0.1:' + PORT + '/ws/moac',{origin: 'https://datafeed.daszichan.com'});
 //var wsc = new WS(config.ws_proto + '://' + config.host_fqdn + ':' + PORT + '/ws/moac',{origin: 'https://datafeed.daszichan.com'});
 
-console.log(wsc)
-
 wsc.on('open', () => {
 	console.log("...feeding data...");
 	wsc.send(JSON.stringify(metrics));
@@ -36,7 +34,7 @@ wsc.on('message', function (data) {
 wsc.on('error', () => console.log("error happend"))
 
 function getNextBlock() {
-	block = chain3.mc.getBlock(blockNumber + 1);
+	block = chain3.mc.getBlock(blockNumber + 1, true);
 	console.log(blockNumber + 1);
 	metrics = {}
 	if (block) {

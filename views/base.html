@@ -20,90 +20,52 @@
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=cyrillic,latin" />
 		<link rel="stylesheet" href="/static/assets/plugins/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="/static/assets/css/style-mod.css" />
-		<link rel="stylesheet" href="/static/assets/custom-head-foot-scroll-blue.css" />
 		<link rel="stylesheet" href="/static/assets/plugins/line-icons/line-icons.css" />
 		<link rel="stylesheet" href="/static/assets/plugins/font-awesome/css/font-awesome.min.css" />
 	</head>
 	<body>
 		<div class="wrapper">
-			<div class="header">
-				<div class="container">
-					<a class="logo" href="/" target="_parent" title="Home Page">
-					<img id="logo-header" src="/static/images/EtherscanLogo-transparent-b-small.png" alt="Logo" style="margin-top: 16px; margin-bottom: 14px; margin-left: -6px">
-					</a>
-					<div class="topbar hidden-xs hidden-sm ">
-						<form action="/search" method="GET">
-							<ul class="loginbar pull-right">
-								<li><a href="/login" title="Click to Login"> LOGIN</a> <i class="fa  fa-male"></i> &nbsp;&nbsp;</li>
-								<li>
-									<div style="display: inline;">
-										<input id="txtSearchInput" type="text" class="form-control-custom" placeholder="Search by Address / Txhash / Block / Token / Ens" name="q" maxlength="80" style="width: 330px; height: 31px;">
-										<span class="" style="display: inline">
-										<button class="btn-u" type="submit" style="padding: 3px 6px 3px 6px; height: 32px; width: 41px; margin-left: -5px; margin-top: 3px;">GO</button>
-										</span>
-									</div>
-								</li>
-							</ul>
-						</form>
+			<div class="header navbar navbar-default" style="height:100px;" fole="navigation">
+				<script>
+					$(function () {
+					  var vmSearchMobile = new Vue({
+						  el: '#search-form-mobile',
+						  data: { txtSearchInputMobile: '' },
+						  methods: {
+							submit: function() {
+								location.assign(`/api/search/${this._data.txtSearchInputMobile}`);
+							}
+						  }
+					  });
+					});
+				</script>
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="/"><h1>MOACscan</h1></a>
 					</div>
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="fa fa-bars"></span>
-					</button>
-				</div>
-				<div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
-					<div class="container">
-						<ul class="nav navbar-nav">
-							<li id="LI_default" class="active">
-								<a href="/">Home </a>
-							</li>
-							<li id="LI_blockchain" class="dropdown">
-								<a href="#" class="" data-toggle="dropdown">
-								&nbsp;Blockchain
-								</a>
-								<ul class="dropdown-menu">
-									<li id="LI12"><a href="/txs"><i class="fa fa-list-alt"></i>&nbsp;View Txns</a></li>
-									<li id="LI16"><a href="/txsPending"><i class="fa fa-tasks "></i>&nbsp;View Pending Txns</a></li>
-									<li id="LI14"><a href="/txsInternal"><i class="fa fa-puzzle-piece"></i>&nbsp;View Contract Internal Txns</a></li>
-									<li class="divider"></li>
-									<li id="LI_blocks2" class="dropdown-submenu">
-										<a href="/blocks"><i class="fa fa-cubes"></i>&nbsp;View Blocks</a>
-										<ul class="dropdown-menu">
-											<li><a href="/blocks_forked" title="Invalid blocks from block chain reorganizations">FORKED Blocks (Reorgs)</a></li>
-										</ul>
-									</li>
-									<li id="LI8"><a href="/uncles"><i class="fa fa-cube"></i>&nbsp;View Uncles</a></li>
-									<li class="divider"></li>
-									<li id="LI_accountall"><a href="/accounts" title="Normal & Contract Accounts"><i class="fa fa-building"></i>&nbsp;All Accounts</a></li>
-									<li id="LI_contract_verified"><a href="/contractsVerified" title="Contracts with Verified Source Code"><i class="fa fa-check-circle-o"></i>&nbsp;Verified Contracts</a></li>
-								</ul>
-							</li>
-							<li id="LI_services2" class="dropdown">
-								<a href="#" class="" data-toggle="dropdown">
-								&nbsp;Misc &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								</a>
-								<ul class="dropdown-menu">
-									<li id="LI5"><a href="/ether-mining-calculator"><i class="fa fa-gavel"></i>Mining Calculator</a></li>
-									<li id="LI6"><a href="/apis"><i class="fa fa-cogs"></i>APIs</a></li>
-								</ul>
-							</li>
-							<li id="LI_login" class="hidden-lg hidden-md ">
-								<a href="/login" title="Login Now">&nbsp;Login</a>
-							</li>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav navbar-right">
+							<li><a target="_blank" href="/api/search">Blocks</a></li>
+							<li><a target="_blank" href="/api/search">Transactions</a></li>
+							<li><a target="_blank" href="/api/search">Subchains</a></li>
+							<li><a href="/static/html/pool.html">Minings</a></li>
 						</ul>
 					</div>
 				</div>
+				<div id="search-form-mobile" style="margin-top:40px;margin-bottom:0;">
+					<input id="txtSearchInputMobile" v-model="txtSearchInputMobile" v-on:keyup.enter="submit" type="text" placeholder="Search for Account, Tx Hash or Data" class="form-control" style="text-align: center;" name="q" maxlength="100" title="Address, Contract, Txn Hash or Data" />
+				</div>
 			</div>
 			<!-- /header -->
-			<div class="container left hidden-lg hidden-md" id="divmobilesearch" style="margin-top: 5px; margin-bottom: -18px; padding-right: 20px; padding-left: 20px;">
-				<form action="/search" method="GET">
-					<input id="txtSearchInputMobile" type="text" placeholder="Search for Account, Tx Hash or Data" class="form-control" style="text-align: center;" name="q" maxlength="100" title="Address, Contract, Txn Hash or Data" />
-				</form>
-				<br /><br />
-			</div>
 			<!-- /mobilesearch -->
 			{% block main %}
-			<div class="profile container " style="margin-top: 0px">
+			<div class="profile container-fluid " style="margin-top: 0px">
 				{% block main_row %}
 				<div class="row">
 					<div>
@@ -117,7 +79,7 @@
 									<div class="panel panel-profile no-bg">
 										<div class="panel-heading overflow-h">
 											<h2 class="panel-title heading-sm pull-left"><i class="fa fa-cubes"></i>Blocks</h2>
-											<a href="/blocks" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
+											<a href="/api/block" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 										</div>
 										{% block main_block %}
 										{% endblock %}
@@ -128,7 +90,7 @@
 										<div class="panel-heading overflow-h">
 											<h2 class="panel-title heading-sm pull-left"><i class="fa fa-list-alt "></i>Transactions</h2>
 											<span style="color: #999999; font-size: 11px; margin-bottom: -20px; padding-bottom: 0px;"></span>
-											<a href="txs" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
+											<a href="/api/tx" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 										</div>
 										{% block main_tx %}
 										{% endblock %}
@@ -154,8 +116,9 @@
 		</div>
 		<div class="footer-v1">
 			<div class="footer">
-				<div class="container">
+				<div class="container-fluid">
 					<div class="row">
+						<!--
 						<div class="col-md-3 map-img md-margin-bottom-40">
 							<a href="http://www.ethereum.org" target="_blank" rel="nofollow">
 							<img id="logo-footer" class="footer-logo" src="/static/images/Powered-by-Ethereum-small.png" alt=""></a>
@@ -188,25 +151,25 @@
 								</table>
 							</address>
 						</div>
+						-->
 					</div>
 				</div>
 			</div>
 			<div class="copyright">
-				<div class="container">
+				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-8">
-							<p style="font-family:'Open Sans',sans-serif; font-size: 11px; color: #C0C0C0;">MOACscan © 2018 [A]
-								Running
-								<a target="_blank" href='https://github.com/ethereum/go-ethereum'>Geth</a>&<a target="_blank" href='https://www.parity.io/'>Parity</a> | Donations:<a href="https://etherscan.io/address/0x71c7656ec7ab88b098defb751b7401b5f6d8976f">0x71c7656ec7ab88b098defb751b7401b5f6d8976f</a>
-							</p>
+							<p><a target="_blank" href="https://moacscan.daszichan.com">Website</a> - <a target="_blank" href="https://github.com/moactum/moacscan">GitHub</a> - <a target="_blank" href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001472794708264206fcf1589bb43caa0395752aa26538c000">revised from 廖雪峰</a></p>
+						<p><strong>donation:</strong> 0x515710900f459aabf340E8921AD25a86B72E128a</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="/static/js/vue.min.js"></script>
+		<script type="text/javascript" src="/static/js/vue2-filters.min.js"></script>
 		<script type="text/javascript" src="/static/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="/static/assets/combine-js-bottom.js"></script>
+		<!--<script type="text/javascript" src="/static/assets/combine-js-bottom.js"></script>-->
 		<link rel="Stylesheet" href="/static/css/jquery-ui.min.css" type="text/css" />
 	</body>
 </html>

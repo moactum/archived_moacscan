@@ -8,10 +8,10 @@ module.exports = {
         return async (ctx, next) => {
             if (ctx.request.path.startsWith(pathPrefix)) {
                 console.log(`Process API ${ctx.request.method} ${ctx.request.url}...`);
-				if (/html/i.test(ctx.request.headers.accept)) {
+				if (!/json/i.test(ctx.request.headers.accept) && /html/i.test(ctx.request.headers.accept)) {
                 	ctx.rest = (data) => {
 						//ctx.render('api.html', {data: data});
-						ctx.render('api.html', {data: JSON.stringify(data, undefined, 4)});
+						ctx.render('api.html', {data: data});
 					}
 				} else {
                     ctx.rest = (data) => {
