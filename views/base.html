@@ -14,80 +14,8 @@
 		<script type="text/javascript" src="/static/jss/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="/static/assets/css/pages/profile.css">
 		<link rel="stylesheet" href="/static/assets/plugins/scrollbar/src/perfect-scrollbar.css">
-		<script type="text/javascript">
-			$(function () {
-				 $('#containerchart').highcharts({
-					  chart: {
-							type: 'line',
-							spacingBottom: 0,
-							spacingTop: 0,
-							spacingLeft: 0,
-							spacingRight: 0,
-					  },
-					  legend: {
-							enabled: false
-					  },
-					  exporting: {
-							enabled: false
-					  },
-					  credits: {
-							enabled: false
-					  },
-					  title: {
-							text: '14 day Ethereum Transaction History',
-							style: {
-								 fontSize: '13px'
-							}
-					  },
-					  xAxis: {
-							title: { text: '' },
-							categories: [
-								 '4/5','4/6','4/7','4/8','4/9','4/10','4/11','4/12','4/13','4/14','4/15','4/16','4/17','4/18',
-							]
-					  },
-					  yAxis: {
-							labels: {
-								 enabled: true
-							},
-							title: {
-								 text: null
-							}
-					  },
-					  
-					  tooltip: {
-							formatter: function () {
-								 return '<span style="font-size:10px">' + this.point.friendlydate + '</span><br><table><tr><td style="padding:0">' +
-										  '<span style="color:' + this.series.color + '">Transactions: </a></span><b>' + this.point.y + '</b><br>'									  
-										  '</td></tr></table>';
-							}
-					  },
-					  plotOptions: {
-							series: {
-								 animation: {
-											duration: 0
-								 },
-								 point: {
-									  events: {
-											select: function (e) {
-												 location.href = 'txs?dt=' + this.options.dt;
-											}
-									  }
-								 }
-							},
-							column: {
-								 pointPadding: 0.1,
-								 borderWidth: 0
-							}
-					  },
-					  series: [{
-							name: 'Transactions',
-							data: [{y : 695871, dt : '1522886400', friendlydate : 'Thu 5, Apr 2018',  },{y : 647981, dt : '1522972800', friendlydate : 'Fri 6, Apr 2018',  },{y : 535865, dt : '1523059200', friendlydate : 'Sat 7, Apr 2018',  },{y : 595733, dt : '1523145600', friendlydate : 'Sun 8, Apr 2018',  },{y : 609799, dt : '1523232000', friendlydate : 'Mon 9, Apr 2018',  },{y : 571388, dt : '1523318400', friendlydate : 'Tue 10, Apr 2018',  },{y : 609102, dt : '1523404800', friendlydate : 'Wed 11, Apr 2018',  },{y : 692606, dt : '1523491200', friendlydate : 'Thu 12, Apr 2018',  },{y : 730344, dt : '1523577600', friendlydate : 'Fri 13, Apr 2018',  },{y : 611188, dt : '1523664000', friendlydate : 'Sat 14, Apr 2018',  },{y : 619985, dt : '1523750400', friendlydate : 'Sun 15, Apr 2018',  },{y : 664402, dt : '1523836800', friendlydate : 'Mon 16, Apr 2018',  },{y : 742823, dt : '1523923200', friendlydate : 'Tue 17, Apr 2018',  },{y : 703293, dt : '1524009600', friendlydate : 'Wed 18, Apr 2018',  },],
-							allowPointSelect: true,
-					  },
-					  ]
-				 });
-			});
-		</script>
+		{% block highchart_portal %}
+		{% endblock %}
 		<link rel="shortcut icon" href="/static/images/favicon2.ico" />
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=cyrillic,latin" />
 		<link rel="stylesheet" href="/static/assets/plugins/bootstrap/css/bootstrap.min.css" />
@@ -174,7 +102,7 @@
 				<br /><br />
 			</div>
 			<!-- /mobilesearch -->
-			{% block main_profile %}
+			{% block main %}
 			<div class="profile container " style="margin-top: 0px">
 				{% block main_row %}
 				<div class="row">
@@ -191,10 +119,8 @@
 											<h2 class="panel-title heading-sm pull-left"><i class="fa fa-cubes"></i>Blocks</h2>
 											<a href="/blocks" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 										</div>
-										<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px">
-											{% block main_block %}
-											{% endblock %}
-										</div>
+										{% block main_block %}
+										{% endblock %}
 									</div>
 								</div>
 								<div class="col-sm-6">
@@ -204,10 +130,8 @@
 											<span style="color: #999999; font-size: 11px; margin-bottom: -20px; padding-bottom: 0px;"></span>
 											<a href="txs" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 										</div>
-										<div id="scrollbar" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px">
-											{% block main_tx %}
-											{% endblock %}
-										</div>
+										{% block main_tx %}
+										{% endblock %}
 									</div>
 								</div>
 							</div>
@@ -261,10 +185,6 @@
 										<td><i class="fa fa-reddit-square"></i></td>
 										<td>&nbsp;<a href="https://www.reddit.com/r/etherscan/" target="_blank">Forum</a></td>
 									</tr>
-									<tr>
-										<td><i class="fa fa-twitter"></i></td>
-										<td>&nbsp;<a href="https://twitter.com/etherscan" target="_blank">Twitter</a></td>
-									</tr>
 								</table>
 							</address>
 						</div>
@@ -277,14 +197,14 @@
 						<div class="col-md-8">
 							<p style="font-family:'Open Sans',sans-serif; font-size: 11px; color: #C0C0C0;">MOACscan © 2018 [A]
 								Running
-								<a target="_blank" href='https://github.com/ethereum/go-ethereum'>Geth</a>&<a target="_blank" href='https://www.parity.io/'>Parity</a>
-								| Donations:<a href="https://etherscan.io/address/0x71c7656ec7ab88b098defb751b7401b5f6d8976f">0x71c7656ec7ab88b098defb751b7401b5f6d8976f</a>
+								<a target="_blank" href='https://github.com/ethereum/go-ethereum'>Geth</a>&<a target="_blank" href='https://www.parity.io/'>Parity</a> | Donations:<a href="https://etherscan.io/address/0x71c7656ec7ab88b098defb751b7401b5f6d8976f">0x71c7656ec7ab88b098defb751b7401b5f6d8976f</a>
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript" src="/static/js/vue.min.js"></script>
 		<script type="text/javascript" src="/static/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/static/assets/combine-js-bottom.js"></script>
 		<link rel="Stylesheet" href="/static/css/jquery-ui.min.css" type="text/css" />

@@ -1,5 +1,81 @@
 {% extends "base.html" %}
 
+		{% block highchart_portal %}
+		<script type="text/javascript">
+			$(function () {
+				 $('#containerchart').highcharts({
+					  chart: {
+							type: 'line',
+							spacingBottom: 0,
+							spacingTop: 0,
+							spacingLeft: 0,
+							spacingRight: 0,
+					  },
+					  legend: {
+							enabled: false
+					  },
+					  exporting: {
+							enabled: false
+					  },
+					  credits: {
+							enabled: false
+					  },
+					  title: {
+							text: '14 day Ethereum Transaction History',
+							style: {
+								 fontSize: '13px'
+							}
+					  },
+					  xAxis: {
+							title: { text: '' },
+							categories: [
+								 '4/5','4/6','4/7','4/8','4/9','4/10','4/11','4/12','4/13','4/14','4/15','4/16','4/17','4/18',
+							]
+					  },
+					  yAxis: {
+							labels: {
+								 enabled: true
+							},
+							title: {
+								 text: null
+							}
+					  },
+					  
+					  tooltip: {
+							formatter: function () {
+								 return '<span style="font-size:10px">' + this.point.friendlydate + '</span><br><table><tr><td style="padding:0">' +
+										  '<span style="color:' + this.series.color + '">Transactions: </a></span><b>' + this.point.y + '</b><br>'									  
+										  '</td></tr></table>';
+							}
+					  },
+					  plotOptions: {
+							series: {
+								 animation: {
+											duration: 0
+								 },
+								 point: {
+									  events: {
+											select: function (e) {
+												 location.href = 'txs?dt=' + this.options.dt;
+											}
+									  }
+								 }
+							},
+							column: {
+								 pointPadding: 0.1,
+								 borderWidth: 0
+							}
+					  },
+					  series: [{
+							name: 'Transactions',
+							data: [{y : 695871, dt : '1522886400', friendlydate : 'Thu 5, Apr 2018',  },{y : 647981, dt : '1522972800', friendlydate : 'Fri 6, Apr 2018',  },{y : 535865, dt : '1523059200', friendlydate : 'Sat 7, Apr 2018',  },{y : 595733, dt : '1523145600', friendlydate : 'Sun 8, Apr 2018',  },{y : 609799, dt : '1523232000', friendlydate : 'Mon 9, Apr 2018',  },{y : 571388, dt : '1523318400', friendlydate : 'Tue 10, Apr 2018',  },{y : 609102, dt : '1523404800', friendlydate : 'Wed 11, Apr 2018',  },{y : 692606, dt : '1523491200', friendlydate : 'Thu 12, Apr 2018',  },{y : 730344, dt : '1523577600', friendlydate : 'Fri 13, Apr 2018',  },{y : 611188, dt : '1523664000', friendlydate : 'Sat 14, Apr 2018',  },{y : 619985, dt : '1523750400', friendlydate : 'Sun 15, Apr 2018',  },{y : 664402, dt : '1523836800', friendlydate : 'Mon 16, Apr 2018',  },{y : 742823, dt : '1523923200', friendlydate : 'Tue 17, Apr 2018',  },{y : 703293, dt : '1524009600', friendlydate : 'Wed 18, Apr 2018',  },],
+							allowPointSelect: true,
+					  },
+					  ]
+				 });
+			});
+		</script>
+		{% endblock %}
 							{% block main_row_graphs %}
 							<div id="ContentPlaceHolder1_mainboxes" class="row margin-bottom-10">
 								<div class="col-sm-6 sm-margin-bottom-20">
@@ -36,286 +112,98 @@
 									</div>
 								</div>
 							</div>
+							<script>
+							function addMessage(list, msg) {
+								list.push(msg);
+								$('#message-list').parent().animate({
+									scrollTop: $('#message-list').height()
+								}, 1000);
+							}
+							function addTxs(list, msg) {
+								msg.data.block.transactions.forEach( hash => list.push(hash) );
+								$('#tx-list').parent().animate({
+									scrollTop: $('#tx-list').height()
+								}, 1000);
+							}
+							
+							$(function () {
+								var vmMessageList = new Vue({
+									el: '#scrollbar2',
+									data: {
+										messages: []
+									},
+									methods: {
+										block: function (msg) {
+											window.open(`/api/block/${msg.data.block.hash}`);
+										}
+									}
+								});
+								var vmTxList = new Vue({
+									el: '#scrollbar',
+									data: {
+										txs: []
+									},
+									methods: {
+										transaction: function (tx) {
+											window.open(`/api/tx/${tx}`);
+										},
+									}
+								});
+							
+								var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac');
+								var ws_conncted = true;
+							
+								ws.onmessage = function(event) {
+									var data = event.data;
+									console.log("received new websocket message");
+									var msg = JSON.parse(data);
+									if (msg.type === 'datafeed') {
+										if (msg.data.block) {
+											addMessage(vmMessageList.messages, msg);
+											addTxs(vmTxList.txs, msg);
+										}
+									}
+								};
+								ws.onclose = function (evt) {
+									console.log('[closed] ' + evt.code);
+									ws_connected = false;
+								};
+								ws.onerror = function (code, msg) {
+									console.log('[ERROR] ' + code + ': ' + msg);
+									ws_connected = false;
+								};
+							});
+							</script>
 							{% endblock %}
 
-											{% block main_block %}
+										{% block main_block %}
+										{% raw %}
+										<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px">
+											<div v-for="msg in messages">
 											<div class="profile-event">
-												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a href='/block/5466109'><font size="2" color='white'>Block 5466109</font></a></span><small>&gt; 39 secs ago</small></div>
+												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a href='/api/block/{{ msg.data.block.number }}'><font size="2" color='white'>Block {{ msg.data.block.number }}</font></a></span><small>{{ msg.data.block.timestamp }}</small></div>
 												<div class="overflow-h">
-													Mined By <a href='/address/0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c' class='address-tag'>SparkPool</a></p>
-													<p><a href="/txs?block=5466109" title="Transactions in this Block"><b>67 txns</b></a> in 10 secs</p>
-													<p> Block Reward 3<b>.</b>2449 Ether</p>
+													Mined By <a href='/api/address/{{ msg.data.block.miner }}' class='address-tag'>{{ msg.data.block.miner }}</a></p>
+													<p> {{ msg.data.block.hash }} </p>
 												</div>
 											</div>
-											<div class="profile-event">
-												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a href='/block/5466100'><font size="2" color='white'>Block 5466100</font></a></span><small>&gt; 1 min ago</small></div>
-												<div class="overflow-h">
-													Mined By <a href='/address/0x2a65aca4d5fc5b5c859090a6c34d164135398226' class='address-tag'>DwarfPool1</a></p>
-													<p><a href="/txs?block=5466100" title="Transactions in this Block"><b>176 txns</b></a> in 7 secs</p>
-													<p> Block Reward 3<b>.</b>12529 Ether</p>
-												</div>
 											</div>
-											{% endblock %}
+										</div>
+										{% endraw %}
+										{% endblock %}
 
-											{% block main_tx %}
+										{% block main_tx %}
+										{% raw %}
+										<div id="scrollbar" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px">
+											<div v-for="tx in txs">
 											<div class="profile-post color-one">
 												<span class="profile-post-numb"><i class="fa fa-hdd-o"></i></span>
 												<div class="profile-post-in">
-													<h3 class="heading-xs">TX# <a href="/tx/0x7d9a12bbd5223c37f78ea955eb577adbd27d5cfc7a26734352059b00d13493e5" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>0x7d9a12bbd5223c37f78ea955eb577adbd27d5cfc7a26734352059b00d13493e5</font></a><span class="pull-right" style="font-size: small">&gt; 39 secs ago &nbsp;</span></h3>
-													<p>From <a href='/address/0x2137f2cd3eaea6d59bbce10e76d16c7cbab047e9' class='address-tag'>0x2137f2cd3eaea6d59bbce10e76d16c7cbab047e9</a> To <a href='/address/0x64f00663f39af179c3612c35bf943810bf3bd428' class='address-tag'>0x64f00663f39af179c3612c35bf943810bf3bd428</a></p>
-													<p>Amount 0<b>.</b>05 Ether</p>
+													<h3 class="heading-xs">TX# <a href="/api/tx/{{ tx }}" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>{{ tx }}</font></a><span class="pull-right" style="font-size: small">{{ tx.timestamp }}</span></h3>
+													<p>From <a href='/api/address/{{ tx }}' class='address-tag'>{{ tx }}</a> To <a href='/api/address/{{ tx }}' class='address-tag'>{{ tx }}</a></p>
 												</div>
 											</div>
-											<div class="profile-post color-three">
-												<span class="profile-post-numb"><i class="fa fa-hdd-o"></i></span>
-												<div class="profile-post-in">
-													<h3 class="heading-xs">TX# <a href="/tx/0xa438fc13730adac7649721ff3fc8f9e563c98015f2aae6b0257d2504cd920cfc" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>0xa438fc13730adac7649721ff3fc8f9e563c98015f2aae6b0257d2504cd920cfc</font></a><span class="pull-right" style="font-size: small">&gt; 39 secs ago &nbsp;</span></h3>
-													<p>From <a href='/address/0x834565044f65d99e33d78e2d399c3817697d7ba7' class='address-tag'>0x834565044f65d99e33d78e2d399c3817697d7ba7</a> To <a href='/address/0x430ced28da27d478eb0f96b8066926741ee96bef' class='address-tag'>0x430ced28da27d478eb0f96b8066926741ee96bef</a></p>
-													<p>Amount 0<b>.</b>003 Ether</p>
-												</div>
-											</div>
-											{% endblock %}
-
-{% block main %}
-
-		<script>
-		
-		function addToUserList(list, user) {
-			var i;
-			for (i=0; i<list.length; i++) {
-				if (list[i].id === user.id) {
-					return;
-				}
-			}
-			list.push(user);
-		}
-		
-		function removeFromUserList(list, user) {
-			var i, target = -1;
-			for (i=0; i<list.length; i++) {
-				if (list[i].id === user.id) {
-					target = i;
-					break;
-				}
-			}
-			if (target >= 0) {
-				list.splice(target, 1);
-			}
-		}
-		
-		function addMessage(list, msg) {
-			list.push(msg);
-			$('#message-list').parent().animate({
-				scrollTop: $('#message-list').height()
-			}, 1000);
-		}
-		
-		function addTxs(list, msg) {
-			msg.data.block.transactions.forEach( hash => list.push(hash) );
-			$('#tx-list').parent().animate({
-				scrollTop: $('#tx-list').height()
-			}, 1000);
-		}
-		//Vue.filter('humanize_time', function(value) {
-		//	return moment.unix(value).fromNow();
-		//});
-		
-		$(function () {
-			var vmMessageList = new Vue({
-				el: '#message-list',
-				data: {
-					messages: []
-				},
-				methods: {
-					block: function (msg) {
-						window.open(`/api/block/${msg.data.block.hash}`);
-					},
-					tooltip: function (msg) {
-						return `
-		height:
-		${msg.data.block.number}
-		
-		nonce:
-		${msg.data.block.nonce}
-		
-		miner:
-		${msg.data.block.miner}
-		
-		hash:
-		${msg.data.block.hash}
-		
-		`;
-					}
-				}
-			});
-			var vmTxList = new Vue({
-				el: '#tx-list',
-				data: {
-					txs: []
-				},
-				methods: {
-					transaction: function (tx) {
-						window.open(`/api/tx/${tx}`);
-					},
-				}
-			});
-		
-			var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac');
-		
-			var ws_conncted = true;
-		
-			ws.onmessage = function(event) {
-				var data = event.data;
-				console.log("received new websocket message");
-				var msg = JSON.parse(data);
-				if (msg.type === 'datafeed') {
-					if (msg.data.block) {
-						addMessage(vmMessageList.messages, msg);
-						addTxs(vmTxList.txs, msg);
-					}
-				}
-			};
-		
-			ws.onclose = function (evt) {
-				console.log('[closed] ' + evt.code);
-				ws_connected = false;
-				//alert("websocket closed, refresh page to continue getting updates");
-			};
-		
-			ws.onerror = function (code, msg) {
-				console.log('[ERROR] ' + code + ': ' + msg);
-				ws_connected = false;
-			};
-		
-			$('#form-chat').submit(function (e) {
-				e.preventDefault();
-				var input = $(this).find('input[type=text]');
-				var text = input.val().trim();
-				console.log('[chat] ' + text);
-				if (text) {
-					input.val('');
-					ws.send(text);
-				}
-			});
-		});
-		</script>
-		
-		<main class="container-fluid">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> Blocks</h3>
-						</div>
-						<div class="panel-body">
-							{% raw %}
-							<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
-								<div id="message-list">
-									<div style="margin-bottom:20px;" v-for="msg in messages">
-										<div v-if="msg.type === 'datafeed'">
-											<div class="media" :title="tooltip(msg)" v-on:click="block(msg)">
-												<div class="media-left">
-													<img class="media-object" style="width:6px; height:36px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
-												</div>
-												<div class="media-body">
-													<ul class="nav nav-pills" role='tablist'>
-														<li role="presentation"><span class="badge">HEIGHT {{ msg.data.block.number }}</span></li>
-														<!--<li role="presentation"><span class="badge">TIMESTAMP {{ msg.data.block.timestamp }}</span></li>-->
-														<li role="presentation"><span class="badge">TXS {{ msg.data.block.transactions.length }}</spn></li>
-													</ul>
-													<span v-text="msg.data.block.hash"></span>
-												</div>
 											</div>
 										</div>
-										<div v-if="msg.type === 'serverinfo'">
-											<div class="media">
-												<div class="media-left">
-													<img class="media-object" style="width:12px; height:48px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
-												</div>
-												<div class="media-body">
-													<h4 class="media-heading" v-text="msg.user.name"></h4>
-													<span v-text="msg.data.sockconn"></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							{% endraw %}
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Transactions</h3>
-						</div>
-						<div class="panel-body">
-							{% raw %}
-							<div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
-								<div id="tx-list">
-									<div class="media" v-for="tx in txs">
-									<div v-on:click="transaction(tx)">
-										<div class="media-left">
-											<img class="media-object" style="width:6px; height:20px;" v-bind:src="'/static/images/' + user.image + '.png'">
-										</div>
-										<div class="media-body">
-											<span class="media-heading" v-text="tx"></span>
-										</div>
-									</div>
-									</div>
-								</div>
-							</div>
-							{% endraw %}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-6 col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">WEB</h3>
-						</div>
-						<div class="panel-body">
-							<p><a target="_blank" href="http://moac.io">http://moac.io</a></p>
-							<p><a target="_blank" href="http://moacfans.com">http://moacfans.com</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-6 col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">QQ</h3>
-						</div>
-						<div class="panel-body">
-							<p>522035998</p>
-							<p>264831838</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-6 col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">TELEGRAM</h3>
-						</div>
-						<div class="panel-body">
-							<p>moacblockchain</p>
-							<p>moacdevelopers</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-6 col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">WECHAT</h3>
-						</div>
-						<div class="panel-body">
-							<p>moacchain</p>
-							<p>&nbsp;</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</main>
-{% endblock %}
+										{% endraw %}
+										{% endblock %}
