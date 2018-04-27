@@ -118,40 +118,6 @@
 			<div class="footer">
 				<div class="container-fluid">
 					<div class="row">
-						<!--
-						<div class="col-md-3 map-img md-margin-bottom-40">
-							<a href="http://www.ethereum.org" target="_blank" rel="nofollow">
-							<img id="logo-footer" class="footer-logo" src="/static/images/Powered-by-Ethereum-small.png" alt=""></a>
-							<p style="font-family:'Open Sans',sans-serif; font-size: 12px; color: #C0C0C0;">Etherscan is a Block Explorer and Analytics Platform for Ethereum, a decentralized smart contracts platform.</p>
-						</div>
-						<div class="col-md-6 md-margin-bottom-40 hidden-xs">
-							<div class="headline">
-								<h2>Latest Discussions</h2>
-								<a href='/comments'><span class="pull-right" style="color: #C0C0C0; margin-top: 8px; ">[View More]</span></a>
-							</div>
-							<ul class="list-unstyled link-list">
-								<li><img src='/static/images/icons/comment-white.png'>&nbsp;&nbsp;<a href='http://etherscan.io/token/0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0#comments'>Any People May be sent 10usd need Money 0x7Da4a84a675b3E...</a><i class="fa fa-angle-right"></i></li>
-								<li><img src='/static/images/icons/comment-white.png'>&nbsp;&nbsp;<a href='http://etherscan.io/address/0x61edcdf5bb737adffe5043706e7c5bb1f1a56eea#comments'>Need Money no Big only 100 usd May be send any one my ad...</a><i class="fa fa-angle-right"></i></li>
-							</ul>
-						</div>
-						<div class="col-md-3 md-margin-bottom-40">
-							<div class="headline">
-								<h2>Links</h2>
-							</div>
-							<address class="md-margin-bottom-40">
-								<table>
-									<tr>
-										<td><i class="fa fa-envelope"></i>&nbsp;</td>
-										<td>&nbsp;<a href="/contactus">Contact Us</a></td>
-									</tr>
-									<tr>
-										<td><i class="fa fa-reddit-square"></i></td>
-										<td>&nbsp;<a href="https://www.reddit.com/r/etherscan/" target="_blank">Forum</a></td>
-									</tr>
-								</table>
-							</address>
-						</div>
-						-->
 					</div>
 				</div>
 			</div>
@@ -166,8 +132,10 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="/static/js/vue.min.js"></script>
+		{% block vuejs %}
+		<script type="text/javascript" src="/static/js/vue.js"></script>
 		<script type="text/javascript" src="/static/js/vue2-filters.min.js"></script>
+		{% endblock %}
 		<script type="text/javascript" src="/static/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 		<!--<script type="text/javascript" src="/static/assets/combine-js-bottom.js"></script>-->
 		<link rel="Stylesheet" href="/static/css/jquery-ui.min.css" type="text/css" />

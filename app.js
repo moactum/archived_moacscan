@@ -90,10 +90,10 @@ function createWebSocketServer(server, onConnection, onMessage, onClose, onError
 		console.log('[WebSocketServer] connection: ' + location.href);
 		//console.log(req);
 		try {
-			if (req.headers.origin.match(/feed/)) {
+			if (req.headers.origin.match(/datafeed/)) {
 				ws.on('message', onMessage);
 			} else {
-				ws.on('message', () => console.log('...exluding non feed data'));
+				ws.on('message', () => console.log('...ignoring non feed data'));
 			}
 		}
 		catch(e) {

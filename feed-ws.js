@@ -2,12 +2,13 @@ var config = require('./config');
 var PORT = process.env.PORT | config.port | 3002
 var metrics = {};
 var blockNumber = 0, block, block_hash = '';
+const axios = require('axios');
 const sleep = require('sleep');
 const WS = require('ws');
 const Chain3 = require('chain3');
 
 const chain3 = new Chain3();
-chain3.setProvider(new chain3.providers.HttpProvider('http://127.0.0.1:8545'));
+chain3.setProvider(new chain3.providers.HttpProvider(config.chain3_provider | 'http://127.0.0.1:8545'));
 
 blockNumber = chain3.mc.blockNumber;
 while ( ! block ) {
@@ -31,18 +32,39 @@ wsc.on('message', function (data) {
 	console.log(`received ${data}`);
 });
 
-wsc.on('error', () => console.log("error happend"))
+wsc.on('error', () => console.log("error happend, closing ..."))
 
 function getNextBlock() {
 	block = chain3.mc.getBlock(blockNumber + 1, true);
 	console.log(blockNumber + 1);
-	metrics = {}
+	metrics = {};
 	if (block) {
 		blockNumber += 1;
 		metrics.block = block;
-		wsc.send(JSON.stringify(metrics));
-		//console.log(block);
+
+		metrics.info_moac = {
+			block_current: blockNumber,
+			block_difficulty_total: block.totalDifficulty,
+			block_difficulty: block.difficulty,
+			version_api: chain3.version.api,
+			version_moac: chain3.version.moac,
+			version_network: chain3.version.network
+		};
+
+		async function getCoinMarketCap() {
+			try {
+				const response_cmc = await axios.get('https://api.coinmarketcap.com/v1/ticker/moac/');
+				metrics.info_cmc = response_cmc.data[0];
+				console.log(metrics.info_cmc);
+			} catch (error) {
+				console.error(error);
+			}
+			wsc.send(JSON.stringify(metrics));
+		}
+		getCoinMarketCap();
+
 	}
+	//console.log(block);
 }
 //wsc.send("triggering braodcase of current state");
 sleep.sleep(3);
