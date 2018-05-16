@@ -8,7 +8,7 @@ const WS = require('ws');
 const Chain3 = require('chain3');
 
 const chain3 = new Chain3();
-chain3.setProvider(new chain3.providers.HttpProvider(config.chain3_provider | 'http://127.0.0.1:8545'));
+chain3.setProvider(new chain3.providers.HttpProvider(config.chanin3_provider));
 
 blockNumber = chain3.mc.blockNumber;
 while ( ! block ) {
@@ -39,12 +39,13 @@ function getNextBlock() {
 	console.log(blockNumber + 1);
 	metrics = {};
 	if (block) {
+		block2 = chain3.mc.getBlock(blockNumber - 9);
 		blockNumber += 1;
 		metrics.block = block;
 
 		metrics.info_moac = {
 			block_current: blockNumber,
-			block_difficulty_total: block.totalDifficulty,
+			block_timedelta: block.timestamp - block2.timestamp ,
 			block_difficulty: block.difficulty,
 			version_api: chain3.version.api,
 			version_moac: chain3.version.moac,
@@ -68,5 +69,5 @@ function getNextBlock() {
 }
 //wsc.send("triggering braodcase of current state");
 sleep.sleep(3);
-setInterval(getNextBlock,4000);
+setInterval(getNextBlock,5000);
 setInterval(() => wsc.send(JSON.stringify({})),17000);
