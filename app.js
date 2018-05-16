@@ -1,6 +1,6 @@
 var config = require('./config');
 
-const PORT = process.env.PORT | config.port | 3000; 
+const PORT = process.env.PORT || config.port || 3000;
 
 const url = require('url');
 

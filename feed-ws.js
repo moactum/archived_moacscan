@@ -1,5 +1,5 @@
 var config = require('./config');
-var PORT = process.env.PORT | config.port | 3002
+var PORT = process.env.PORT || config.port || 3002
 var metrics = {};
 var blockNumber = 0, block, block_hash = '';
 const axios = require('axios');
@@ -8,7 +8,7 @@ const WS = require('ws');
 const Chain3 = require('chain3');
 
 const chain3 = new Chain3();
-chain3.setProvider(new chain3.providers.HttpProvider(config.chanin3_provider));
+chain3.setProvider(new chain3.providers.HttpProvider(config.chain3_provider));
 
 blockNumber = chain3.mc.blockNumber;
 while ( ! block ) {

@@ -6,7 +6,7 @@ const Chain3 = require('chain3');
 
 const chain3 = new Chain3();
 
-chain3.setProvider(new chain3.providers.HttpProvider(config.chain3_provider | 'http://127.0.0.1:8545'));
+chain3.setProvider(new chain3.providers.HttpProvider(config.chain3_provider || 'http://127.0.0.1:8545'));
 
 const APIError = require('../rest').APIError;
 
