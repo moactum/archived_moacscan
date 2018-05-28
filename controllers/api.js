@@ -31,6 +31,13 @@ module.exports = {
 		}
 		ctx.rest(data);
 	},
+	'GET /api/uncle/:hash_or_height/:index': async (ctx, next) => {
+		var data = chain3.mc.getUncle(ctx.params.hash_or_height,ctx.params.index);
+		if (!data) {
+			throw new APIError('invalid_data', 'not found');
+		}
+		ctx.rest(data);
+	},
 	'GET /api/tx': async (ctx, next) => {
 		ctx.rest({info: 'index not ready yet, use the search please'});
 	},
