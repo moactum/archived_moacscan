@@ -58,6 +58,13 @@ module.exports = {
 		}
 		ctx.rest({balance_moac: data});
 	},
+	'GET /api/address/:address/code': async (ctx, next) => {
+		var data = chain3.mc.getCode(ctx.params.address);
+		if (!data) {
+			throw new APIError('invalid_data', 'not found');
+		}
+		ctx.rest({code: data});
+	},
 	'GET /api/search': async (ctx, next) => {
 		ctx.rest({info: 'index not ready yet, use the search please'});
 	},
