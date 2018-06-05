@@ -1,59 +1,15 @@
 {% extends "base.html" %}
 
-							{% block main_row_graphs %}
-							<script> var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac'); </script>
-							<div id="ContentPlaceHolder1_mainboxes" class="row margin-bottom-10">
-								{% raw %}
-								<div class="col-sm-6 sm-margin-bottom-20">
-									<div class="service-block-v3 service-block-blue" id="graph_one">
-										<i class="icon-globe" style="margin-right:16px"></i>
-										<span class="service-heading" rel='tooltip' data-placement='right' title='View More'><a href="/stat/supply"><font size=2 color='white'>MARKET CAP OF $ {{ info_cmc.market_cap_usd }}</font></a></span>
-										<h4 style="margin-top:2px"><font color='white'><font color='white'>{{ info_cmc.price_usd }} @ {{ info_cmc.price_btc }} BTC/MOAC <font color='#0ADC00' size='2' rel='tooltip' data-placement='bottom' title='USD/MOAC change'> ({{ info_cmc.percent_change_24h }}%)</font></font></font></h4>
-										<div class="clearfix margin-bottom-5 "></div>
-										<div class="row margin-bottom-20">
-											<div class="col-xs-6 service-in">
-												<small><a href="blocks" rel='tooltip' data-placement='right' title="View List of Blocks"><font color="white">Last Block</font></a></small>
-												<h4 style="color: #FFFFFF"><span id="ContentPlaceHolder1_Label1" style="font-size:Larger;"><a href="blocks" rel='tooltip' data-placement='bottom' title="The latest block no"><font color="white">{{ info_moac.block_current }}</font></a></span>
-													<span class='hidden-xs' rel='tooltip' data-placement='right' title='Avg Block Time of the latest 5000 blocks'><font size=2> </font></span>
-												</h4>
-											</div>
-											<div class="col-xs-6 text-right service-in">
-												<small><a href="txs" rel='tooltip' data-placement='left' title="View List of Transactions"><font color="white">MOAC Network</font></a></small>
-												<h4><a href='/txs' rel='tooltip' data-placement='left' title='Total Txns counter<br>(updated every 5 mins)'><font color='white'>{{ info_moac.version_network }}-{{ info_moac.version_moac }}</font></a></h4>
-											</div>
-										</div>
-										<div class="statistics">
-											<h3 class="heading-xs"><a href="/chart/hashrate" rel='tooltip' data-placement='right' title="View HashRate Chart"><font color="white">Hash Rate</font></a>
-												<a href="/chart/difficulty" class="pull-right" rel='tooltip' data-placement='left' title="View Difficulty Growth Chart"><font color="white">Network Difficulty</font></a>
-											</h3>
-											<font color="white"><span rel='tooltip' data-placement='bottom' title='Hash Rate of last block'>{{ info_moac.block_difficulty * 10 / info_moac.block_timedelta / 1000000000000 }}</span>&nbsp;T</font>
-											<span class="pull-right" rel='tooltip' data-placement='bottom' title="Total Difficulty"><font color=white>{{ info_moac.block_difficulty / 1000000000000 }} T</font></span>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div id="moac_info" class="tag-box tag-box-v2 box-shadow shadow-effect-1" style="border-right-color: #3498db; border-right-style: solid; border-right-width: 2px; margin-bottom: 0px; background-color: #FFFFFF;">
-										<div id="moacinfo" style="min-width: 255px; height: 180px; margin: 0 auto;"></div>
-										<!--
-										<div id="containerchart" style="min-width: 255px; height: 180px; margin: 0 auto;"></div>
-										-->
-									</div>
-								</div>
-								{% endraw %}
-							</div>
-							{% endblock %}
-
 										{% block main_block %}
+										<script> var ws = new WebSocket('{{ ws_proto }}://' + location.host + '/ws/moac'); </script>
 										{% raw %}
-										<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px; overflow-x:hidden; overflow-y:scroll;">
+										<div id="scrollbar2" class="card-section height-75" style="overflow-x:hidden; overflow-y:scroll;">
 											<div v-for="msg in messages">
-											<div class="profile-event">
-												<div class="date-formats" style='width: 135px; height: 65px; margin-top:2px'><span><a :href="'/api/block/' + msg.data.block.number"><font size="2" color='white'>Block {{ msg.data.block.number }}</font></a></span><small>{{ msg.data.block.timestamp }}</small></div>
-												<div class="overflow-h">
-													<p class=""><a href="" class='hash-tag-frontpage' title="Block Hash"><font color='#3498db'>{{ msg.data.block.hash }}</font></a></p>
-													<p><a :href="'/api/txs/' +  msg.data.block.number" title="Transactions in this Block"><b>{{ msg.data.block.transactions.length }} txns</b></a></p>
-													<p>Mined By <a :href="'/api/address/' + msg.data.block.miner" class='address-tag'>{{ msg.data.block.miner }}</a></p>
-												</div>
+											<div class="callout">
+												<p><span><a :href="'/api/block/' + msg.data.block.number">Block {{ msg.data.block.number }}</a></span>&nbsp;&nbsp;{{ msg.data.block.timestamp }}&nbsp;&nbsp;{{ msg.data.block.transactions.length }} txns</p>
+											<p class="">{{ msg.data.block.hash }}</p>
+											
+											<p>Mined By <a :href="'/api/address/' + msg.data.block.miner" class='address-tag'>{{ msg.data.block.miner }}</a></p>
 											</div>
 											</div>
 										</div>
@@ -62,22 +18,18 @@
 
 										{% block main_tx %}
 										{% raw %}
-										<div id="scrollbar" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark" style="height: 580px; overflow-x:hidden; overflow-y:scroll;">
+										<div id="scrollbar" class="card-section height-75" style="overflow-x:hidden; overflow-y:scroll;">
 											<div v-for="tx in txs">
-											<div class="profile-post color-one">
-												<span class="profile-post-numb"><i class="fa fa-hdd-o"></i></span>
-												<div class="profile-post-in">
-													<p class=""><a :href="'/api/tx/' + tx.hash" class='hash-tag-frontpage' title="Transaction Hash"><font color='#3498db'>{{ tx.hash }}</font></a><span class="pull-right" style="font-size: small">{{ tx.timestamp }}</span></p>
-													<p>From <a :href="'/api/address/' + tx.from" class='address-tag'>{{ tx.from | truncate }}</a> To <a href="'/api/address/' + tx.to" class='address-tag'>{{ tx.to | truncate }}</a></p>
-													<p>Amount {{ tx.value / 1e18 }} MOAC</p>
-												</div>
+											<div class="callout">
+												<p class=""><a :href="'/api/tx/' + tx.hash" class='hash-tag-frontpage' title="Transaction Hash">{{ tx.hash }}</a>&nbsp;&nbsp;{{ tx.timestamp }}</p>
+												<p>From <a :href="'/api/address/' + tx.from" class='address-tag'>{{ tx.from | truncate }}</a> To <a href="'/api/address/' + tx.to" class='address-tag'>{{ tx.to | truncate }}</a></p>
+												<p>Amount {{ tx.value / 1e18 }} MOAC</p>
 											</div>
 											</div>
 										</div>
 										{% endraw %}
 										{% endblock %}
 		{% block vuejs %}
-		<script src="/static/highcharts/js/highcharts.js"></script>
 		<script type="text/javascript" src="/static/js/vue.js"></script>
 		<script type="text/javascript" src="/static/js/vue2-filters.min.js"></script>
 		<script type="text/javascript" src="/static/jss/homevue.js"></script>
