@@ -1,7 +1,7 @@
 module.exports = {
-	host_fqdn: 'moacscan.daszichan.com',
+	host_fqdn: 'moac.guru',
 	http_proto: 'https',
 	ws_proto: 'wss',
-	chain3_provider: 'http://daszichan:8545',
+	chain3_provider: 'http://127.0.0.1:8545',
 	port: 3002
 }
