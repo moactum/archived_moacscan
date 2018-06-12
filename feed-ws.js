@@ -52,17 +52,29 @@ function getNextBlock() {
 			version_network: chain3.version.network
 		};
 
-		async function getCoinMarketCap() {
+		//async function getCoinMarketCap() {
+		//	try {
+		//		const response_cmc = await axios.get('https://api.coinmarketcap.com/v1/ticker/moac/');
+		//		metrics.info_cmc = response_cmc.data[0];
+		//		console.log(metrics.info_cmc);
+		//	} catch (error) {
+		//		console.error(error);
+		//	}
+		//	wsc.send(JSON.stringify(metrics));
+		//}
+		//getCoinMarketCap();
+
+		async function getJsonStat() {
 			try {
-				const response_cmc = await axios.get('https://api.coinmarketcap.com/v1/ticker/moac/');
-				metrics.info_cmc = response_cmc.data[0];
-				console.log(metrics.info_cmc);
+				const response_stat = await axios.get('http://localhost:8000/api/block/1');
+				metrics.info_stat = response_stat.data;
+				console.log(metrics.info_stat);
 			} catch (error) {
 				console.error(error);
 			}
 			wsc.send(JSON.stringify(metrics));
 		}
-		getCoinMarketCap();
+		getJsonStat();
 
 	}
 	//console.log(block);
