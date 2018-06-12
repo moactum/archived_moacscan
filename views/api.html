@@ -1,12 +1,10 @@
 {% extends "base.html" %} 
 
 {% block main %}
-<div class="grid-x">
-	<div class="cell">
-        <div class="card">
-			<div class="card-section">
+<div class="grid-x grid-margin-x overflow-scroll">
+	<div class="cell overflow-scroll">
                 <h3><span class="glyphicon glyphicon-user"></span> api query result</h3>
-				<table class="table table-striped table-hover table-responsive">
+				<table class="radius bordered shadow overflow-scroll">
 				{% for k, v in data %}
 					<tr>
 						<td>{{ k }}</td>
@@ -22,8 +20,6 @@
 					</tr>
 				{% endfor %}
 				</table>
-			</div>
-        </div>
     </div>
 </div>
 {% endblock %}
