@@ -66,7 +66,7 @@ function getNextBlock() {
 
 		async function getJsonStat() {
 			try {
-				const response_stat = await axios.get('http://localhost:8000/api/block/1');
+				const response_stat = await axios.get('http://localhost:8000/api/jsonstats/3/');
 				metrics.info_stat = response_stat.data;
 				console.log(metrics.info_stat);
 			} catch (error) {

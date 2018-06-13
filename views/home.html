@@ -5,10 +5,10 @@
 										{% raw %}
 										<div id="scrollbar2" class="card-section height-75" style="height:70%;overflow-x:hidden; overflow-y:scroll;">
 											<div v-for="msg in messages">
-												<p><span><a :href="'/api/block/' + msg.data.block.number">Block {{ msg.data.block.number }}</a></span>&nbsp;&nbsp;{{ msg.data.block.timestamp }}&nbsp;&nbsp;{{ msg.data.block.transactions.length }} txns</p>
-											<p class="">{{ msg.data.block.hash }}</p>
+												<p><span><a :href="'/api/block/' + msg.number">Block {{ msg.number }}</a></span>&nbsp;&nbsp;{{ msg.timestamp }}&nbsp;&nbsp;{{ msg.transactions.length }} txns</p>
+											<p class="">{{ msg.hash }}</p>
 											
-											<p>Mined By <a :href="'/api/address/' + msg.data.block.miner" class='address-tag'>{{ msg.data.block.miner }}</a></p>
+											<p>Mined By <a :href="'/api/address/' + msg.miner" class='address-tag'>{{ msg.miner }}</a></p>
 											<hr>
 											</div>
 										</div>
