@@ -1,5 +1,5 @@
 var config = require('./config');
-var PORT = process.env.PORT || config.port || 3002
+var PORT = process.env.PORT || config.port || 3003
 var metrics = {};
 var blockNumber = 0, block, block_hash = '';
 const axios = require('axios');
@@ -66,9 +66,9 @@ function getNextBlock() {
 
 		async function getJsonStat() {
 			try {
-				const response_stat = await axios.get('http://localhost:8001/drf/jsonstats/3/');
+				const response_stat = await axios.get('http://localhost:8000/drf/jsonstats/1/');
 				metrics.info_stat = response_stat.data;
-				console.log(metrics.info_stat);
+				//console.log(metrics.info_stat);
 			} catch (error) {
 				console.error(error);
 			}
